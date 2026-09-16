@@ -4,6 +4,9 @@ from langgraph.graph import MessagesState
 from langchain_core.messages import AIMessage
 import os
 from dotenv import load_dotenv
+from langgraph.prebuilt import ToolNode , tools_condition
+from app.tools.weather import get_weather
+from app.tools.places import get_places
 import json
 from groq import Groq
 load_dotenv()
@@ -69,14 +72,17 @@ def llm_node(state:TravelState):
     }
 
     
-
+tool_node=ToolNode([get_weather,get_places])
 graph_builder=StateGraph(TravelState)
 
 graph_builder.add_node("llm",llm_node)
+graph_builder.add_node("tools",tool_node)
 
 graph_builder.add_edge(START,"llm")
+graph_builder.add_conditional_edges("llm",tools_condition)
+graph_builder.add_edge("tools","llm")
 graph_builder.add_edge("llm",END)
 
 travel=graph_builder.compile()
-result=travel.invoke({"messages": [{"role": "user", "content": "Goa ka weather kaisa hai"}]})
+result=travel.invoke({"messages": [{"role": "user", "content": "Weather in Goa"}]})
 print(result)
