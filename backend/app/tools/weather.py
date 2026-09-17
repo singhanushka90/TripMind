@@ -10,10 +10,10 @@ def get_weather(city:str):
                                     "name":city,
                                     "count":1,
                                     "language":"en",
-                                    "format":"json",
-                                    "countryCode":"IN"
+                                    "format":"json"
+                                 
                                 },
-                                timeout=10
+                                timeout=40
                     )
     geo_response.raise_for_status()
     geo_data=geo_response.json()

@@ -1,88 +1,96 @@
-from typing import TypedDict
-from langgraph.graph import StateGraph,START,END
-from langgraph.graph import MessagesState
-from langchain_core.messages import AIMessage
 import os
+
 from dotenv import load_dotenv
-from langgraph.prebuilt import ToolNode , tools_condition
+from langchain_groq import ChatGroq
+from langgraph.graph import StateGraph, START, MessagesState
+from langgraph.prebuilt import ToolNode, tools_condition
+from langchain_core.messages import SystemMessage
+
 from app.tools.weather import get_weather
 from app.tools.places import get_places
-import json
-from groq import Groq
+from app.tools.flights import get_flights
+
+
 load_dotenv()
 
-client=Groq(api_key=os.getenv("GROQ_API_KEY"))
-tools = [
-        {
-            "type": "function",
-            "function": {
-                "name": "get_weather",
-                "description": "Get the current weather for a given city.",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "city": {
-                            "type": "string",
-                            "description": "Name of the city"
-                        }
-                    },
-                    "required": ["city"]
-                }
-            }
-        }
-    ]
+llm = ChatGroq(
+    model="openai/gpt-oss-120b",
+    temperature=0
+)
 
+
+llm_with_tools = llm.bind_tools([
+    get_weather,
+    get_places,
+    get_flights
+])
+
+SYSTEM_PROMPT = """
+You are a reliable AI travel assistant.
+
+Rules:
+1. Use tool results as the primary source of factual information.
+2. Never invent flight prices, hotel prices, visa rules, baggage allowances,
+   flight durations, airline details, or weather information.
+3. If a requested detail is not available from the tools, clearly say:
+   "I don't have verified information for this detail."
+4. Do not add random tourist places that were not returned by the places tool.
+5. Clearly distinguish between live tool data and general travel suggestions.
+6. Give concise, structured and useful answers.
+"""
 
 
 
 class TravelState(MessagesState):
     pass
 
-def llm_node(state:TravelState):
-    user_message=state["messages"][-1].content
-    response = client.chat.completions.create(
-            model="openai/gpt-oss-120b",
-            messages= [
-        {
-            "role": "system",
-            "content": ("You are an AI travel assistant. Use the weather tool whenever the user asks about weather."
-            )
-        },
-        {
-            "role": "user","content": user_message
-        }
-    ],
-    tools=tools,
-    tool_choice="auto"
-    )
 
-    assistant_message=response.choices[0].message
-    print("Content:",assistant_message.content)
-    print("Tool calls:",assistant_message.tool_calls)
-    tool_calls=[]
-    if assistant_message.tool_calls:
-        for tool_call in assistant_message.tool_calls:
-            tool_calls.append({
-                "name":tool_call.function.name,
-                "args":json.loads(tool_call.function.arguments),
-                "id":tool_call.id
-            })
+
+def llm_node(state: TravelState):
+
+    messages = [
+        SystemMessage(content=SYSTEM_PROMPT),
+        *state["messages"]
+    ]
+
+    response = llm_with_tools.invoke(messages)
+
+    print("Content:", response.content)
+    print("Tool calls:", response.tool_calls)
+
     return {
-        "messages": [AIMessage(content=assistant_message.content or "",tool_calls=tool_calls)]
+        "messages": [response]
     }
 
-    
-tool_node=ToolNode([get_weather,get_places])
-graph_builder=StateGraph(TravelState)
+tool_node = ToolNode([
+    get_weather,
+    get_places,
+    get_flights
+])
 
-graph_builder.add_node("llm",llm_node)
-graph_builder.add_node("tools",tool_node)
 
-graph_builder.add_edge(START,"llm")
-graph_builder.add_conditional_edges("llm",tools_condition)
-graph_builder.add_edge("tools","llm")
-graph_builder.add_edge("llm",END)
+graph_builder = StateGraph(TravelState)
 
-travel=graph_builder.compile()
-result=travel.invoke({"messages": [{"role": "user", "content": "Weather in Goa"}]})
-print(result)
+graph_builder.add_node("llm", llm_node)
+graph_builder.add_node("tools", tool_node)
+
+# START → LLM
+graph_builder.add_edge(
+    START,
+    "llm"
+)
+
+
+graph_builder.add_conditional_edges(
+    "llm",tools_condition
+)
+
+
+graph_builder.add_edge(
+    "tools","llm"
+)
+
+travel = graph_builder.compile()
+
+
+
