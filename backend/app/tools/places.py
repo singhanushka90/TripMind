@@ -48,6 +48,3 @@ def get_places(city: str):
         ]
     }
 
-
-if __name__ == "__main__":
-    print(get_places.invoke({"city": "Goa"}))

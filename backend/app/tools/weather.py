@@ -47,6 +47,3 @@ def get_weather(city:str):
         "wind_speed":current["wind_speed_10m"]
     }
 
-if __name__=="__main__":
-    result=get_weather.invoke({"city":"Goa"})
-    print(result)

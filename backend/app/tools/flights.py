@@ -50,9 +50,3 @@ def get_flights(departure_airport: str, arrival_airport: str):
         "flights": flights
     }
 
-
-if __name__ == "__main__":
-    print(get_flights.invoke({
-        "departure_airport": "DEL",
-        "arrival_airport": "BOM"
-    }))
