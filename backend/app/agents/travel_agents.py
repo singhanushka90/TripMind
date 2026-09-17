@@ -6,9 +6,11 @@ from langgraph.graph import StateGraph, START, MessagesState
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_core.messages import SystemMessage
 
+
 from app.tools.weather import get_weather
 from app.tools.places import get_places
 from app.tools.flights import get_flights
+from app.tools.hotels import get_hotels
 
 
 load_dotenv()
@@ -22,7 +24,8 @@ llm = ChatGroq(
 llm_with_tools = llm.bind_tools([
     get_weather,
     get_places,
-    get_flights
+    get_flights,
+    get_hotels
 ])
 
 SYSTEM_PROMPT = """
@@ -65,7 +68,8 @@ def llm_node(state: TravelState):
 tool_node = ToolNode([
     get_weather,
     get_places,
-    get_flights
+    get_flights,
+    get_hotels
 ])
 
 
