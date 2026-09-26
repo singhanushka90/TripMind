@@ -1,0 +1,140 @@
+.response-box {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.markdown-content {
+  color: #e2e8f0;
+}
+
+.markdown-content > :first-child {
+  margin-top: 0;
+}
+
+.markdown-content > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  margin: 1.25rem 0 0.75rem;
+  color: #f8fafc;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.markdown-content h1 { font-size: 1.8rem; }
+.markdown-content h2 { font-size: 1.5rem; }
+.markdown-content h3 { font-size: 1.25rem; }
+
+.markdown-content p,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content blockquote,
+.markdown-content pre {
+  margin: 0.75rem 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: 1.4rem;
+}
+
+.markdown-content li + li {
+  margin-top: 0.35rem;
+}
+
+.markdown-content strong {
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.markdown-content em {
+  color: #cbd5e1;
+}
+
+.markdown-content a {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.markdown-content hr {
+  border: 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  margin: 1rem 0;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown-content th {
+  background: rgba(15, 23, 42, 0.75);
+  color: #f8fafc;
+}
+
+.markdown-content td {
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.markdown-content code {
+  background: rgba(15, 23, 42, 0.9);
+  color: #7dd3fc;
+  border-radius: 0.35rem;
+  padding: 0.12rem 0.38rem;
+  font-size: 0.9em;
+}
+
+.markdown-content pre {
+  overflow-x: auto;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 0.9rem;
+  padding: 0.9rem 1rem;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  padding: 0;
+  color: #e2e8f0;
+}
+
+.markdown-content blockquote {
+  border-left: 3px solid rgba(96, 165, 250, 0.8);
+  background: rgba(15, 23, 42, 0.28);
+  padding: 0.4rem 0.9rem;
+  color: #cbd5e1;
+}
+
+.response-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.response-box::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 9999px;
+}
+
+.response-box::-webkit-scrollbar-thumb {
+  background: rgba(96, 165, 250, 0.75);
+  border-radius: 9999px;
+}
