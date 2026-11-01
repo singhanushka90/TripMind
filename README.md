@@ -2,7 +2,7 @@
 
 # ✈️ AI Travel Agent
 
-### 🌍 Intelligent AI-Powered Travel Planning 
+### 🌍 Intelligent AI-Powered Travel Planning Assistant.
 
 An AI travel agent that understands natural-language travel queries and uses real-world APIs to provide weather, tourist places, flights and hotel information.
 
