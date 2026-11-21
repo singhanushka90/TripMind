@@ -1,6 +1,6 @@
 <div align="center">
 
-# ✈️ AI Travel Agent
+# ✈️ AI Travel Ag
 
 ### 🌍 Intelligent AI-Powered Travel Planning Assistant.
 
