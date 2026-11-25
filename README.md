@@ -1,6 +1,6 @@
 <div align="center">
 
-# ✈️ AI Travel Age
+# ✈️ AI Travel Agen
 
 ### 🌍 Intelligent AI-Powered Travel Planning Assistant.
 
